@@ -1,0 +1,158 @@
+project_name: solar-filaments
+exp_name: sem_s_f0
+exp: ${exp_name}_${now_dir}
+model_name: s
+task: sem_seg
+train:
+  root: ./runs/dfine_work
+  pretrained_dataset: coco
+  pretrained_model_path: null
+  imagenet_backbone: false
+  coco_dataset: false
+  data_path: ./runs/dfine_work/data_sem_5f/fold0
+  path_to_test_data: ./data/MAGFiLO_1.0_Kaggle_2026/test/test_images
+  path_to_save: ./runs/dfine_work/runs/sem_s_f0
+  debug_img_path: ${train.root}/output/debug_images
+  eval_preds_path: ${train.root}/output/eval_preds
+  bench_img_path: ${train.root}/output/bench_imgs
+  infer_path: ${train.root}/output/infer
+  use_wandb: false
+  device: cuda
+  label_to_name:
+    0: background
+    1: filament
+  use_one_class: false
+  rare_class_sampling: false
+  kd:
+    teacher: null
+    img_size: null
+    teacher_batch: null
+    cls_weight: 1.0
+    loc_weight: 1.5
+    mask_weight: 1.0
+    sem_seg_weight: 3.0
+    sem_seg_tau: 4.0
+  sem_seg:
+    ignore_index: 255
+    class_weights: null
+  kpts:
+    shape:
+      - 17
+      - 3
+    flip_idx: [0, 2, 1, 4, 3, 6, 5, 8, 7, 10, 9, 12, 11, 14, 13, 16, 15]
+    sigmas: null
+    names: null
+    skeleton: null
+    conf_thresh: 0.5
+    visible_thresh: 0.5
+    freeze_except_kpt: false
+  ddp:
+    enabled: false
+    n_gpus: 2
+  decision_metrics:
+    - f1
+    - mAP_50
+    - iou
+  img_size:
+    - 2048
+    - 2048
+  in_channels: 3
+  keep_ratio: false
+  to_visualize_eval: false
+  debug_img_processing: false
+  amp_enabled: true
+  amp_dtype: bfloat16
+  clip_max_norm: 0.1
+  batch_size: 1
+  b_accum_steps: 2
+  epochs: 30
+  max_walltime_min: 315
+  early_stopping: 0
+  ignore_background_epochs: 0
+  num_workers: 4
+  mask_batch_size: 150
+  freeze_except_mask: false
+  conf_thresh: 0.4
+  iou_thresh: 0.5
+  use_ema: true
+  ema_momentum: 0.9998
+  use_scheduler: true
+  use_muon: true
+  aux_optimizer: adan
+  adan_lr_mult: 5.0
+  adan_betas:
+    - 0.98
+    - 0.92
+    - 0.99
+  base_lr: ${train.lrs.${model_name}.base_lr}
+  backbone_lr: ${train.lrs.${model_name}.backbone_lr}
+  cycler_pct_start: 0.1
+  weight_decay: 0.000125
+  betas:
+    - 0.9
+    - 0.999
+  label_smoothing: 0.0
+  mosaic_augs:
+    mosaic_prob: null
+    no_mosaic_epochs: 5
+    mosaic_scale: [0.5, 1.5]
+    degrees: 0.0
+    translate: 0.2
+    shear: 2.0
+  augs:
+    rotation_degree: 10
+    rotation_p: 0.05
+    multiscale_prob: 0.0
+    scale_jitter: null
+    rotate_90: 0.5
+    left_right_flip: 0.5
+    up_down_flip: 0.5
+    to_gray: 0.01
+    blur: 0.01
+    gamma: 0.02
+    brightness: 0.02
+    noise: 0.01
+    coarse_dropout: 0.0
+  seed: 42
+  cudnn_fixed: false
+  lrs:
+    "n":
+      backbone_lr: 0.0004
+      base_lr: 0.0008
+    s:
+      backbone_lr: 6.0e-05
+      base_lr: 0.00025
+    m:
+      backbone_lr: 2.0e-05
+      base_lr: 0.00015
+    l:
+      backbone_lr: 1.0e-05
+      base_lr: 0.00016
+    x:
+      backbone_lr: 2.0e-06
+      base_lr: 0.0002
+split:
+  ignore_negatives: false
+  shuffle: true
+  train_split: 0.85
+  val_split: 0.15
+export:
+  from_pretrained: false
+  half: true
+  max_batch_size: 1
+  dynamic_input: false
+  sem_seg_probs: false
+  formats: [onnx, tensorrt, openvino, coreml]
+  parity: true
+  ov_int8_max_drop: 0.02
+  trt_int8_workspace_gb: 4
+  trt_int8_validate: true
+bench:
+  formats: [torch, tensorrt, onnx, openvino, coreml]
+infer:
+  to_crop: true
+  to_track: true
+  paddings:
+    w: 0.05
+    h: 0.05
+now_dir: ${now:%Y-%m-%d}
