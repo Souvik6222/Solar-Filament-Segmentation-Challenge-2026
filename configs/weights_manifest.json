@@ -1,0 +1,32 @@
+{
+  "release_tag": "v1.0",
+  "submission_ref": "58424451",
+  "submission_file": "s2_hd_mitb2_d3_2.csv",
+  "archives": [
+    {
+      "filename": "weights_stage1_cnxt_r34.tar.gz",
+      "sha256": "168a7149211d9c3625f7bdc39dbc94e4e8ea40ba68b8670e213985f23a4e64e0",
+      "contents": [
+        "runs/unet_cnx_t/fold0..4/best.pt",
+        "runs/tile2048_unet_r34/fold0..4/best.pt"
+      ]
+    },
+    {
+      "filename": "weights_stage1_hrnet_dfine.tar.gz",
+      "sha256": "4e6e8c149279ee191832cd8a26b35a0d8848c37a7af5513f8ea69d307d33362a",
+      "contents": [
+        "runs/tile512_hrnet32/fold0..4/best.pt",
+        "runs/dfine_s_2048/fold0..4/model.pt",
+        "runs/dp_hd_sharp/tree_dp_bundle.pkl"
+      ]
+    },
+    {
+      "filename": "weights_stage2_mitb2.tar.gz",
+      "sha256": "d9f42b106ca930c36a184095c74c0c868fb5e5d1dbfe581e02c86cda48d99def",
+      "contents": [
+        "runs/s2_hd_mitb2/fold0..4_best.pt",
+        "runs/s2_hd_mitb2/config.json"
+      ]
+    }
+  ]
+}
